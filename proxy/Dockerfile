@@ -24,8 +24,9 @@ RUN apt-get update && \
       php8.2-gd \
       libpcre3-dev \
       build-essential \
-      lua5.3 \
-      liblua5.3-dev \
+      lua5.1 \
+      lua5.1-dev \
+      liblua5.1-dev \
       luarocks && \
     rm -rf /var/lib/apt/lists/*
 
@@ -37,15 +38,13 @@ RUN curl -fsSL https://openresty.org/package/pubkey.gpg | apt-key add - && \
 RUN mkdir -p /root/.luarocks && \
     chmod -R 755 /root/.luarocks
 
-RUN luarocks config --local variables.LUA_DIR /usr/local/openresty/luajit && \
-    luarocks config --local variables.LUA_INCDIR /usr/local/openresty/luajit/include/luajit-2.1 && \
-    luarocks config --local variables.LUA_LIBDIR /usr/local/openresty/luajit/lib
+RUN luarocks config --local variables.LUA_DIR /usr/include/lua5.1 && \
+    luarocks config --local variables.LUA_INCDIR /usr/include/lua5.1 && \
+    luarocks config --local variables.LUA_LIBDIR /usr/lib/lua5.1
 
-RUN luarocks install luafilesystem --lua-version=5.1
-
+RUN luarocks install luafilesystem
 
 RUN luarocks install lua-resty-redis && \
-    #luarocks install lua-cjson && \
     luarocks install lua-resty-http && \
     luarocks install lua-resty-rsa && \
     luarocks install lua-resty-openssl && \
@@ -70,7 +69,7 @@ RUN mkdir -p /var/www/html /var/www/preprocess /var/www/hosts && \
     mkdir -p /etc/resty-auto-ssl && \
     chown -R nginx:nginx /etc/resty-auto-ssl && \
     chmod -R 755 /etc/resty-auto-ssl
-    
+
 RUN sed -i 's!^listen = .*!listen = 127.0.0.1:9000!' /etc/php/8.2/fpm/pool.d/www.conf
 
 COPY lua /var/www/preprocess
