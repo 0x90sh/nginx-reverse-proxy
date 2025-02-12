@@ -12,11 +12,15 @@ local function entrypoint()
     end
 
     local root_domain, subdomain = helper.get_domain_and_subdomain(host)
-
+    local domain = nil
     if not root_domain then
         ngx.log(ngx.ERR, "Failed to extract root domain from host: ", host)
         helper.render_failed()
         return
+    end
+    domain = root_domain
+    if subdomain then
+        domain = subdomain .. "." .. domain
     end
 
     local patterns = {
@@ -88,9 +92,9 @@ local function entrypoint()
         end
     end
 
-    local proxy_dest = helper.get_proxy_dest(root_domain, file_path)
+    local proxy_dest = helper.get_proxy_dest(domain, file_path)
     if not proxy_dest then
-        ngx.log(ngx.ERR, "No proxy destination found for root domain: ", root_domain)
+        ngx.log(ngx.ERR, "No proxy destination found for domain: ", domain)
         helper.render_failed()
         return
     end
