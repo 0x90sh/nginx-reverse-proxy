@@ -1,9 +1,10 @@
 local helper = require "helper"
+local templates = require "templates"
 package.path = package.path .. ";./?.lua"
 local file_path = "/var/www/hosts/hosts.json"
 
 local function entrypoint()
-
+    ngx.ctx.request_id = helper.generate_uuid()
     local host = ngx.var.host
     if not host then
         ngx.log(ngx.ERR, "No host header found")
@@ -105,6 +106,8 @@ local function entrypoint()
         ngx.var.backend = ngx.var.backend .. ngx.var.is_args .. ngx.var.args
     end
 
+    ngx.log(ngx.ERR, "Proxying to: ", ngx.var.backend)
+
     if string.match(uri, "%.css$") or 
         string.match(uri, "%.js$") or 
         string.match(uri, "%.png$") or
@@ -128,8 +131,9 @@ local function entrypoint()
         string.match(uri, "%.bmp$") or 
         string.match(uri, "%.tiff$") or 
         string.match(uri, "%.webp$") then
-        ngx.var.cache_key = root_domain
+        ngx.var.cache_key = proxy_dest .. uri
         return ngx.exec("@proxycache")
+    end
 
     return ngx.exec("@proxy")
 end

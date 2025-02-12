@@ -120,6 +120,7 @@ local function render_forbidden(message)
     if message == "" or not message then
         message = "Your request has been blocked."
     end
+    local request_id = ngx.ctx.request_id
     ngx.status = ngx.HTTP_FORBIDDEN
     ngx.header.content_type = "text/html"
     ngx.say(string.format(templates.forbidden, message, request_id or "unknown"))
@@ -129,6 +130,7 @@ end
 -- Function to render a 500 Internal Server Error response
 local function render_failed()
     ngx.status = ngx.HTTP_INTERNAL_SERVER_ERROR
+    local request_id = ngx.ctx.request_id
     ngx.header.content_type = "text/html"
     ngx.say(string.format(templates.failed, request_id or "unknown"))
     ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
