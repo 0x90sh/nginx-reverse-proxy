@@ -4,6 +4,13 @@ package.path = package.path .. ";./?.lua"
 local file_path = "/var/www/hosts/hosts.json"
 
 local function entrypoint()
+    local get_data = ngx.req.get_uri_args()
+    local headers = ngx.req.get_headers()
+    local post_data = nil
+
+    local client_ip = ngx.var.http_cf_connecting_ip or ngx.var.http_x_forwarded_for or ngx.var.remote_addr or "127.0.0.1"
+    ngx.var.client_ip = client_ip
+
     ngx.ctx.request_id = helper.generate_uuid()
     local host = ngx.var.host
     if not host then
@@ -32,9 +39,6 @@ local function entrypoint()
         templates.xss_pattern
     }
 
-    local get_data = ngx.req.get_uri_args()
-    local headers = ngx.req.get_headers()
-    local post_data = nil
     if ngx.var.request_method == "POST" and headers["content-type"] then
         ngx.req.read_body()
         local body_data = ngx.req.get_body_data()
