@@ -30,10 +30,10 @@ RUN adduser --system --no-create-home --disabled-login --group nginx
 
 RUN rm /etc/nginx/sites-available/default
 
+COPY error_html /usr/share/nginx/html
+
 COPY nginx.conf /etc/nginx/nginx.conf
 RUN chown nginx:nginx /etc/nginx/nginx.conf
-
-COPY error_html /usr/share/nginx/html
 
 RUN mkdir -p /var/www/html && \
     chown -R nginx:nginx /var/www/html && \

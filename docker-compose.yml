@@ -1,5 +1,9 @@
 version: '3.8'
 
+x-extra-hosts: &extra-hosts
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+
 services:
   proxy:
       build:
@@ -49,7 +53,7 @@ services:
         ipv6_address: 2001:1680:101:57::5
   ox90:
     build:
-      context: ./php-web
+      context: ./php-web-router
       dockerfile: Dockerfile
     volumes:
       - /var/www/0x90:/var/www/html
