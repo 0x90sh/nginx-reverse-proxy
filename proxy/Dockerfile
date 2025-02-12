@@ -34,11 +34,15 @@ RUN curl -fsSL https://openresty.org/package/pubkey.gpg | apt-key add - && \
     apt-get update && \
     apt-get install -y openresty
 
-RUN luarocks config --local lua_dir /usr/local/openresty/luajit && \
-    LUAJIT_INC=/usr/local/openresty/luajit/include/luajit-2.1 \
-    LUAJIT_LIB=/usr/local/openresty/luajit/lib \
-    LUA_INCDIR=/usr/local/openresty/luajit/include/luajit-2.1 \
-    luarocks install luafilesystem --lua-version=5.1
+RUN mkdir -p /root/.luarocks && \
+    chmod -R 755 /root/.luarocks
+
+RUN luarocks config --local variables.LUA_DIR /usr/local/openresty/luajit && \
+    luarocks config --local variables.LUA_INCDIR /usr/local/openresty/luajit/include/luajit-2.1 && \
+    luarocks config --local variables.LUA_LIBDIR /usr/local/openresty/luajit/lib
+    
+RUN sudo luarocks install luafilesystem --lua-version=5.1
+
 
 RUN luarocks install lua-resty-redis && \
     #luarocks install lua-cjson && \
