@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  proxy:
+      build:
+        context: ./proxy
+        dockerfile: Dockerfile
+      ports:
+        - mode: host
+          protocol: tcp
+          published: 80
+          target: 80
+      volumes:
+        - ./proxy/lua:/var/www/preprocess
+        - ./proxy/hosts.json:/var/www/hosts/hosts.json
+      networks:
+        main-network:
+          ipv4_address: 172.18.0.2
+          ipv6_address: 2001:1680:101:57::2
+  starux:
+    build:
+      context: ./php-web
+      dockerfile: Dockerfile
+    volumes:
+      - /var/www/starux:/var/www/html
+    networks:
+      main-network:
+        ipv4_address: 172.18.0.3
+        ipv6_address: 2001:1680:101:57::3
+  hqdata:
+    build:
+      context: ./php-web
+      dockerfile: Dockerfile
+    volumes:
+      - /var/www/hqdata:/var/www/html
+    networks:
+      main-network:
+        ipv4_address: 172.18.0.4
+        ipv6_address: 2001:1680:101:57::4
+  hqdapi:
+    build:
+      context: ./php-web
+      dockerfile: Dockerfile
+    volumes:
+      - /var/www/hqdapi:/var/www/html
+    networks:
+      main-network:
+        ipv4_address: 172.18.0.5
+        ipv6_address: 2001:1680:101:57::5
+  ox90:
+    build:
+      context: ./php-web
+      dockerfile: Dockerfile
+    volumes:
+      - /var/www/0x90:/var/www/html
+    networks:
+      main-network:
+        ipv4_address: 172.18.0.6
+        ipv6_address: 2001:1680:101:57::6
+
+networks:
+  main-network:
+    enable_ipv6: true
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+          gateway: 172.18.0.1
+        - subnet: 2001:1680:101:57::/64
+          gateway: 2001:1680:101:57::1
