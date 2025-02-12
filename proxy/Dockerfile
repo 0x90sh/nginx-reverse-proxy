@@ -34,7 +34,7 @@ RUN curl -fsSL https://openresty.org/package/pubkey.gpg | apt-key add - && \
     apt-get update && \
     apt-get install -y openresty
 
-    RUN luarocks config --local lua_dir /usr/local/openresty/luajit && \
+RUN luarocks config --local lua_dir /usr/local/openresty/luajit && \
     LUAJIT_INC=/usr/local/openresty/luajit/include/luajit-2.1 \
     LUAJIT_LIB=/usr/local/openresty/luajit/lib \
     LUA_INCDIR=/usr/local/openresty/luajit/include/luajit-2.1 \
