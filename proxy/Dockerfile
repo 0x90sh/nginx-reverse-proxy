@@ -40,8 +40,8 @@ RUN mkdir -p /root/.luarocks && \
 RUN luarocks config --local variables.LUA_DIR /usr/local/openresty/luajit && \
     luarocks config --local variables.LUA_INCDIR /usr/local/openresty/luajit/include/luajit-2.1 && \
     luarocks config --local variables.LUA_LIBDIR /usr/local/openresty/luajit/lib
-    
-RUN sudo luarocks install luafilesystem --lua-version=5.1
+
+RUN luarocks install luafilesystem --lua-version=5.1
 
 
 RUN luarocks install lua-resty-redis && \
