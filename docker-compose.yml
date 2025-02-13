@@ -61,6 +61,16 @@ services:
       main-network:
         ipv4_address: 172.18.0.6
         ipv6_address: 2001:1680:101:57::6
+  ostsec:
+    build:
+      context: ./php-web-router
+      dockerfile: Dockerfile
+    volumes:
+      - /var/www/ostsec:/var/www/html
+    networks:
+      main-network:
+        ipv4_address: 172.18.0.7
+        ipv6_address: 2001:1680:101:57::7
 
 networks:
   main-network:
